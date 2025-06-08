@@ -1,44 +1,66 @@
-#include "bits/stdc++.h" 
-using namespace std; 
-#define max(a, b) (a < b ? b : a) 
-#define min(a, b) ((a > b) ? b : a) 
-#define mod 1e9 + 7 
-#define FOR(a, c) for (int(a) = 0; (a) < (c); (a)++) 
-#define FORL(a, b, c) for (int(a) = (b); (a) <= (c); (a)++) 
-#define FORR(a, b, c) for (int(a) = (b); (a) >= (c); (a)--) 
-#define INF 1000000000000000003 
-typedef long long int ll; 
-typedef vector<int> vi; 
-typedef pair<int, int> pi; 
-#define F first 
-#define S second 
-#define PB push_back 
-#define POB pop_back 
-#define MP make_pair 
-int main() 
-{ 
-	ios::sync_with_stdio(0); 
-	cin.tie(0); 
+#include <bits/stdc++.h>
+using namespace std;
+#define mod (998244353)
+#define INF INT_MAX
+#define FOR(a, c) for (int (a) = 0; (a) < (c); (a)++)
+#define FORL(a, b, c) for (int (a) = (b); (a) <= (c); (a)++)
+#define FORR(a, b, c) for (int (a) = (b); (a) >= (c); (a)--)
+typedef long long int ll;
+typedef vector<int> vi;
+typedef pair<int, int> pi;
+typedef vector<string> vs;
+typedef vector<char> vc;
+#define PB push_back
+#define POB pop_back
+#define MP make_pair
 
-	int n,x; cin >> n >> x;
-	int weight[n];
-	FOR(k,n) {
-		cin >> weight[k];
-	}
-	int count = n;
-	int i = 0;
-	int j = n-1;
-	sort(weight,weight+n);
-	while(i<j){
-		if((weight[i]+weight[j]) <= x){
-			i++;
-			j--;
-			count--;
-		}else{
-			j--;
-		}
-	}
-	cout << count;
+void solve() {
+    ll n; cin >> n;
+    ll len = 0;
+    ll b = 1;
+    while ((1LL << (b - 1)) <= n) {
+        len += ((min(1LL << b, n + 1) - 1) - (1LL << (b - 1)) + 1) * b;
+        b++;
+    }
 
-	return 0; 
-} 
+    ll ans = 0;
+    b = 1;
+    ll seen = 0;
+    FOR(pos, len) {
+        while (1) {
+            ll start = 1LL << (b - 1);
+            if (start > n) break;
+
+            ll end = min(1LL << b, n + 1) - 1;
+            ll count = end - start + 1;
+            ll cb = count * b;
+
+            if (pos < seen + cb) {
+                ll rps = pos - seen;
+                ll nx = start + rps / b;
+                ll bps = rps % b;
+                ll digit = (nx >> (b - 1 - bps)) & 1;
+                ans = (ans * 10 + digit) % mod;
+                break;
+            }
+
+            seen += cb;
+            b++;
+        }
+    }
+    cout << ans;
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+        cout << "\n";
+    }
+
+    return 0;
+}
